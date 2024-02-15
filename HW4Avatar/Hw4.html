@@ -1,0 +1,103 @@
+<html>
+
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 15px;
+}
+</style>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec2 vTexCoord;
+attribute  vec4 vColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 color;
+
+varying vec4 fcolor;
+varying vec2 fTexCoord;
+
+void main() 
+{
+	fcolor = color;
+	//fcolor = vColor;
+	fTexCoord = vTexCoord;
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying vec4 fcolor;
+
+varying  vec2 fTexCoord;
+
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void main()
+{
+    /*gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0); */
+	//gl_FragColor = fcolor;
+	//gl_FragColor = fcolor*(texture2D(Tex1, fTexCoord));
+	gl_FragColor = fcolor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+	//gl_FragColor = fcolor*(texture2D(Tex1, fTexCoord));
+	//gl_FragColor = (texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+
+}
+</script>
+
+
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="hw4.js"></script>
+
+</head>
+<body>
+ <table>
+ <tr>
+ <td>
+<div id="slider0">
+torso angle -180 <input id="slide" type="range"
+ min="-180" max="180" step="10" value="0"
+  />
+ 180
+</div><br/>
+ 
+<br/>
+</td>
+</tr>
+</table>
+<div>
+<button id = "Button0">Toggle Animation</button>
+</div>
+ 
+ <div>
+<h1> Name: Albert De La Cruz </h1>
+<h2> Date: April 23, 2021 </h2>
+<h2> Description:</h2> This program uses a hierarchical model of a bunny and animates that model on a continuous loop. This bunny is slightly textured. 
+<h2> Resources: </h2> Figure.js, Figure.html, textureCubev4.js
+
+<br/>
+<canvas id="gl-canvas" width="512"" height="512"
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<br/>
+<div>
+<button id = "Button0">Toggle Animation</button>
+</div>
+
+</div>
+</body>
+</html>

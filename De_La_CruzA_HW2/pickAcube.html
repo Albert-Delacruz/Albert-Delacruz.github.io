@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!-- by Albert De La Cruz-->
+<html>
+<style type="text/css">
+    canvas { background: blue; }
+</style>
+
+<div style="font-family:verdana";>
+
+ 
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute  vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 modelView;
+ 
+
+void main() 
+{
+    gl_PointSize = 10.0;
+	gl_Position = modelView*vPosition;
+	//gl_Position = vPosition;
+    fColor = vColor;
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+
+void
+main()
+{
+    gl_FragColor = fColor;
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="pickAcube.js"></script>
+<script type="text/javascript" src="CreateCube.js"></script>
+
+<body>
+
+<canvas id="gl-canvas" width="512" height="512" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+<br/>
+
+
+
+<div style="font-family:verdana";>
+	Make the center cube replicate motion of an outer cube.
+	</br>
+	Click canvas to pick a cube.
+	
+</div>
+
+<button id= "ResetButton">reset center cube</button>
+
+<div style="font-family:verdana";>
+	scale cube 10%
+	<input type="range" min="0.10" max="1.00" value="0.2" id="scale" step="0.01">
+	100%
+	</br>
+	rotation speed 0
+	<input type="range" min="0.0" max="2.0" value=".2" id="rotation" step="0.1">
+	2
+	</br>
+</div>
+<!-- Body of the html file-->
+<div style="font-family:verdana";>
+	<h1> CSE 470 HW#2: Pick a Cube</h1>
+
+	<strong>Author: </strong>Albert De La Cruz
+	&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp        
+	<strong>Date: </strong>Febuary 2021</br>
+
+	</br>
+	<strong>Description: </strong></br>This program demonstrates the use of an instanced object, the center cube, and applying 
+	translations, rotations, and scaling to the cubes copies around itself. the program also demonstrates interactablity 
+	due to being able to change the center cube's rotation, scale, and rotation speed.
+	</br>
+	</br>
+	<strong>Functionality: </strong></br>This program allows the user to scale up or down all of the cubes. It also alows for 
+	changing all of the cubes rotation speed. One of the outer cubes can be clicked to get the center cube to copy its motion.
+	The center cube can be reset using the rest button.
+	</br>
+	</br>
+	<strong>Resources: </strong></br>Prof. Angel's codes.
+	</br>
+
+</div>
+
+</body>
+</html>

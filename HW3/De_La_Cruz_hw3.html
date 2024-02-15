@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute vec3 vPosition;
+attribute vec3 vNormal;
+
+varying vec4 fColor;
+
+
+uniform vec4 ambientProduct, diffuseProduct, specularProduct, emissiveProduct;
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+uniform vec4 lightPosition;
+uniform float shininess; 
+
+
+void
+main()
+{
+	
+	
+	vec4 pos4D = vec4(vPosition, 1.0);
+	vec4 nor4D = vec4(vNormal, 0.0);
+	
+	
+	
+      //compute lighting in eye coordinates
+    vec3 pos = (modelViewMatrix * pos4D).xyz;
+	// input light has been defined in eye coords in js
+    vec3 light = lightPosition.xyz;
+    vec3 L = normalize( light - pos );
+
+	// eye coordinates assumes eye at origin
+	vec3 eyePoint = vec3(0.0, 0.0, 0.0);
+	vec3 E = normalize( eyePoint - pos );
+
+    // halfway vector
+    vec3 H = normalize( L + E );
+	
+    // Transform vertex normal into eye coordinates
+    vec3 N = normalize( (modelViewMatrix*nor4D).xyz);
+
+    // Compute terms in the illumination equation
+    vec4 ambient = emissiveProduct +ambientProduct;
+
+    float Kd = max( dot(L, N), 0.0 );
+    vec4  diffuse = emissiveProduct + Kd*diffuseProduct;
+	
+	// play: this is how you might do debugging; 
+	//setting colors on condition
+	//if(dot(L, N) < 0.0) diffuse = vec4(1.0, 0.0, 0.0, 1.0);
+
+    float Ks = pow( max(dot(N, H), 0.0), shininess );
+    vec4  specular = emissiveProduct + Ks * specularProduct;
+    
+    if( dot(L, N) < 0.0 ) {
+	specular = vec4(0.0, 0.0, 0.0, 1.0);
+    } 
+	
+	// play  
+	//diffuse = vec4(0.0, 0.0, 0.0, 1.0);
+	//ambient = vec4(0.0, 0.0, 0.0, 1.0);
+	//specular = vec4(0.0, 0.0, 0.0, 1.0);
+	
+	
+    fColor = ambient + diffuse +specular;
+	fColor.a = 1.0;
+	
+    gl_Position = projectionMatrix * modelViewMatrix * pos4D;
+
+    
+}
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec4 fColor;
+
+void
+main()
+{
+
+    gl_FragColor = fColor;
+
+}
+</script>
+
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="De_La_Cruz_hw3.js"></script>
+<script type="text/javascript" src="De_La_Cruz_geometry.js"></script>
+
+<script type="text/javascript" src="multMatrixByVector.js"></script>
+
+
+
+<body style="font-family:verdana;">
+
+<canvas id="gl-canvas" width="512" height="512" color="rgb(0.1,0.0,0.0)">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+<div>
+	Use the left mouse button to rotate the object. Use the right mouse button to zoom in and out.
+</div>
+<div>
+Materials:
+ <button id = "Button0">Default Ruby</button>
+<button id = "Button1">Obsidian</button> 
+<button id = "Button2">Cyan Rubber</button>
+</div>
+
+<div>
+SOR:
+<button id = "Button3">Cylinder</button>
+<button id = "Button4">Logarithm shape</button>
+<button id = "Button5">Spikey star (for fun)</button>
+</div>
+<div>
+<button id = "Button6">Toggle SOR resolution</button>
+</div>
+
+<div>
+Lights:
+<button id = "Button7">Fixed light</button>
+<button id = "Button8">rotating light</button>
+</div>
+
+<div>
+FOV 10 degrees
+	<input type="range" min="10" max="100" value="60" id="scale">
+	100 degrees
+</div>
+
+<div >
+
+</div>
+
+<div>
+Program Features:
+
+</ul>
+</div>
+<div>
+<h2>Name: </h2> Albert De La Cruz
+</div>
+<div>
+<h2>Date: </h2> 4/2
+</div>
+<div>
+<h2>Description:</h2> This program displays a Surface of revolution lit up by a Phong lighting model.
+There are 3 surfaces of revolution, a cylinder, a bowl made by a logarithm function, and a unique spikey star for fun.
+The SOR can be rotated with the left mouse button and zoomed in and out with the right mouse button.
+The SOR can be modified with 3 diffrent materials, ruby, obsidian, and cyan rubber.
+The field of view for the whole canvas can be modified with the FOV slider.
+The lighting buttons do not work.
+</div>
+<div>
+<h2>Resources Used:</h2> PhongModel_MaterialPropertySettings.pdf, multMatixByVector, shadedSphere1.html, shadedSphere1.js, mousy.html, mousy.js
+</div>
+</body>
+</html>

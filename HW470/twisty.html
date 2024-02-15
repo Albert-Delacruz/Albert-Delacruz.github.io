@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+<title>T W I S T Y !</title>
+
+
+<!-- Vertex Shader -->
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+// This is GLSL code (not HTML5)
+
+attribute vec4 vPosition;
+
+//HW470: one or more uniforms to control twisting and color change
+//uniform 
+uniform float theta;
+
+//incoming color attribute and varying for fragment shader
+attribute vec3 vColor;
+varying vec4 color;
+
+void
+main()
+{
+	// HW470: twisty the geometry x,y coords and set z and w
+	// Change the code below.
+	//gl_Position.x = vPosition.x;
+	//gl_Position.y = vPosition.y;
+	
+	float distance = sqrt(vPosition.x*vPosition.x + vPosition.y*vPosition.y);//finding distance to center
+	float newTheta = (theta)/1.75;
+		float s = sin( theta*distance);
+		float c = cos( theta*distance);
+		gl_Position.x =  c * vPosition.x - s * vPosition.y;
+		gl_Position.y =  s * vPosition.x + c * vPosition.y;
+		gl_Position.z = 0.0;
+		gl_Position.w = 1.0;
+
+	// common mistake: using integer instead of float
+	// gl_Position.w = 1; 
+	//     -- this would result in an error
+	// common mistake: trying to change a uniform variable here
+	
+	
+	//HW470: Modify color   
+	// colors are between 0 and 1. 
+	// You will need to do linear interpolation
+	// for example interpolate between current red component and 1.0 
+	float red = (1.0-newTheta)*vColor.r + newTheta*1.0;
+	
+	float green = (1.0-newTheta)*vColor.g + newTheta*1.0;
+	
+	float blue = (1.0-newTheta)*vColor.b + newTheta*1.0;
+
+    //set the varying color for the fragment shader 
+    color = vec4(red, green, blue, 1.0);
+}
+</script>
+
+<!-- Fragment Shader -->
+<!-- (no change to this) -->
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+// This is GLSL code (not HTML5)
+
+precision mediump float;
+
+// Color coming in
+varying vec4 color;
+
+
+void
+main()
+{
+   //pass color to fragment shader
+    gl_FragColor = color;
+}
+</script>
+
+<!-- JS Utility codes and codes for this program -->
+<script type="text/javascript" src="../Common/webgl-utils.js"></script>
+<script type="text/javascript" src="../Common/initShaders.js"></script>
+<script type="text/javascript" src="../Common/MV.js"></script>
+<script type="text/javascript" src="twisty.js"></script>
+</head>   
+
+<body>
+<!--HW470: Add text to communicate what program does -->
+<div style="font-family:verdana";>
+<h1> CSE 470 HW#1: TWISTY!</h1>
+
+<strong>Author: </strong>Albert De La Cruz
+&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp        
+<strong>Date: </strong>January 2019</br>
+
+</br>
+<strong>Description: </strong></br>This program shows a WebGL graphics object that is rotating and twisting at the same time. Part of the object is stationary 
+and the rest is twisting counter-clockwise and then clockwise, with its rotation depending on the vertexes distance to the origin.
+</br>
+</br>
+<strong>How did you map color from the initial (r,g,b) to white?</strong></br>
+HW470: I used linear interpolation to convert from the original color to the color white. The equation I used was (1.0-newTheta)*vColor.r + newTheta*1.0, where
+vColor.r is the original color, in this case red, and newTheta = current_theta / max_theta to keep newTheta between 0 and 1
+</br>
+</br>
+<strong>Resources: </strong>Prof. Angel's codes.</br>
+</br>
+</div>
+
+<canvas id="gl-canvas" width="512" height="512" style="border:2px solid #000000;">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+
+</body>
+</html>

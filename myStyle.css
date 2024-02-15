@@ -1,0 +1,54 @@
+/*CSS file for styling the Resume*/
+*{
+	text-align: center;
+	table: center;
+	font-family: Arial,Helvetica, sans-serif;
+}
+
+
+body {
+	background-color: Aliceblue;
+}
+
+table{
+	border-collapse: collapse;
+}
+
+th{
+	background-color: darkblue;
+	color: white;
+}
+
+table, th, td {
+			border: 1px solid lightgray;
+			align: center;
+			margin: auto;
+			padding: 5px;
+}
+			
+p{
+	width: 500px;
+	margin: auto;
+}
+
+ul{
+	list-style-position: inside;
+}
+
+ol{
+	list-style-position: inside;
+}
+
+h1{
+	border-style: none none dashed none;
+	border-bottom-color: darkblue;
+}
+
+.third{
+	width: 33%
+}
+
+.twothird{
+	
+	width: 66%
+}
